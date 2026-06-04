@@ -1,10 +1,19 @@
 import { supabase } from "@/lib/supabase/client"
-import { LoginInput } from "../domain/types"
+import { LoginInput, RegisterInput } from "../domain/types"
 
 export async function signIn({ email, password }: LoginInput) {
   const { data, error } = await supabase.auth.signInWithPassword({
     email,
     password,
   })
+  return { data, error }
+}
+
+export async function signUp({ email, password }: RegisterInput) {
+  const { data, error } = await supabase.auth.signUp({
+    email,
+    password,
+  })
+
   return { data, error }
 }
