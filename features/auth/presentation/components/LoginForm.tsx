@@ -17,6 +17,7 @@ import {
   Card,
   CardContent,
   CardDescription,
+  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
@@ -94,8 +95,10 @@ export default function LoginFormUI() {
                   </Field>
                 )}
               />
-              <Button type="submit">Iniciar sesión</Button>
-            </FieldGroup>{" "}
+             
+                <Button type="submit" className="h-10">Iniciar sesión</Button>
+             
+            </FieldGroup>
           </form>
         </CardContent>
       </Card>
