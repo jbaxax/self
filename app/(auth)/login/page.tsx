@@ -1,9 +1,12 @@
 import LoginFormUI from '@/features/auth/presentation/components/LoginForm'
 
-export default function page() {
+export default function Page() {
   return (
-    <div>
-      <LoginFormUI/>
+    <div className="flex min-h-svh w-full items-center justify-center p-6 md:p-10">
+      <div className="w-full max-w-sm">
+        <LoginFormUI />
+      </div>
     </div>
   )
 }
+
