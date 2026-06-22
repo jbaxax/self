@@ -4,6 +4,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import React, { useState } from "react"
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools"
 import { ThemeProvider } from "next-themes"
+import { Toaster } from "sonner"
 
 export default function Providers({ children }: { children: React.ReactNode }) {
   const [queryClient] = useState(
@@ -18,7 +19,9 @@ export default function Providers({ children }: { children: React.ReactNode }) {
   )
   return (
     <QueryClientProvider client={queryClient}>
-      <ThemeProvider>{children}</ThemeProvider>
+      <ThemeProvider><main>
+        {children}</main>
+        <Toaster position="top-right"/></ThemeProvider>
       <ReactQueryDevtools />
     </QueryClientProvider>
   )
