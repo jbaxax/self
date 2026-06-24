@@ -19,11 +19,7 @@ import { NavUser } from "./nav-user"
 
 // This is sample data.
 const data = {
-  user: {
-    name: "shadcn",
-    email: "m@example.com",
-    avatar: "/avatars/shadcn.jpg",
-  },
+
   versions: ["1.0.1", "1.1.0-alpha", "2.0.0-beta1"],
   navMain: [
     {
@@ -154,7 +150,12 @@ const data = {
   ],
 }
 
-export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+export function AppSidebar({
+  user,
+  ...props
+}: React.ComponentProps<typeof Sidebar> & {
+  user: { name: string; email: string; avatar: string }
+}) {
   return (
     <Sidebar {...props}>
       <SidebarHeader>
@@ -184,8 +185,8 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         ))}
       </SidebarContent>
       <SidebarRail />
-       <SidebarFooter>
-        <NavUser user={data.user} />
+      <SidebarFooter>
+        <NavUser user={user} />
       </SidebarFooter>
     </Sidebar>
   )

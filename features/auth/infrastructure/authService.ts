@@ -18,10 +18,6 @@ export async function signUp({ email, password }: RegisterInput) {
   return { data, error }
 }
 
-export async function me():<>{
-  const { data, error }  = await supabase.auth.getUser()
-  return {data, error}
-}
 
 export async function signOut(){
   return await supabase.auth.signOut();

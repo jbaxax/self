@@ -38,6 +38,7 @@ export function NavUser({
     avatar: string
   }
 }) {
+  console.log("user", user)
   const { isMobile } = useSidebar()
   const router = useRouter()
   async function logout() {
