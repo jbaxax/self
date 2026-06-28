@@ -10,10 +10,12 @@ export default async function DashboardLayout({
   children: React.ReactNode
 }) {
 
-  const response = await me()
+  const user = await me() as { email: string;  }
+  if (!user)  return <div>Usuario no autenticado</div>
+  console.log("response", user)
   return (
     <SidebarProvider>
-      <AppSidebar user={response.data?.user} />
+      <AppSidebar user={user} />
       <SidebarInset>
         <header className="flex h-16 shrink-0 items-center gap-2 border-b px-4">
           <SidebarTrigger className="-ml-1" />
