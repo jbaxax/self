@@ -16,6 +16,7 @@ import {
 import { VersionSwitcher } from "./version-switcher"
 import { SearchForm } from "./search-form"
 import { NavUser } from "./nav-user"
+import { SessionUser } from "@/features/auth/domain/types"
 
 // This is sample data.
 const data = {
@@ -154,7 +155,7 @@ export function AppSidebar({
   user,
   ...props
 }: React.ComponentProps<typeof Sidebar> & {
-  user: { email: string;  }
+  user: SessionUser
 }) {
   return (
     <Sidebar {...props}>

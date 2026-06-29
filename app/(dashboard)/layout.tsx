@@ -1,7 +1,19 @@
 import { AppSidebar } from "@/components/shared/app-sidebar"
-import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb"
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb"
 import { Separator } from "@/components/ui/separator"
-import { SidebarInset, SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar"
+import {
+  SidebarInset,
+  SidebarProvider,
+  SidebarTrigger,
+} from "@/components/ui/sidebar"
+import { SessionUser } from "@/features/auth/domain/types"
 import { me } from "@/features/auth/infrastructure/authService.server"
 
 export default async function DashboardLayout({
@@ -9,10 +21,9 @@ export default async function DashboardLayout({
 }: {
   children: React.ReactNode
 }) {
-
-  const user = await me() as { email: string;  }
-  if (!user)  return <div>Usuario no autenticado</div>
-  console.log("response", user)
+  const supabaseUser = await me()
+  if (!supabaseUser) return <div>Usuario no autenticado</div>
+  const user : SessionUser = { email: supabaseUser.email! }
   return (
     <SidebarProvider>
       <AppSidebar user={user} />

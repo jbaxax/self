@@ -25,28 +25,13 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar"
-import { signOut } from "@/features/auth/infrastructure/authService"
-import { useRouter } from "next/navigation"
-import { toast } from "sonner"
+import { SessionUser } from "@/features/auth/domain/types"
+import { useLogout } from "@/features/auth/application/useLogout"
 
-export function NavUser({
-  user,
-}: {
-  user: {
-  
-    email: string
-  
-  }
-}) {
-  console.log("user", user)
+export function NavUser({ user }: { user: SessionUser }) {
   const { isMobile } = useSidebar()
-  const router = useRouter()
-  async function logout() {
-    await signOut()
-    toast.success("Cerro sesión exitosamente")
-    router.push("/login")
-  }
-
+ 
+  const logout = useLogout();
   return (
     <SidebarMenu>
       <SidebarMenuItem>
