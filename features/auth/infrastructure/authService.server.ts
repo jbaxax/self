@@ -1,3 +1,4 @@
+"use server"
 import { createClient } from "@/lib/supabase/server"
 import { Tables } from "@/lib/supabase/types"
 import { UpdateUserInput } from "../presentation/schemas/profileSchema"

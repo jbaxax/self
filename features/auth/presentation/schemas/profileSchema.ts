@@ -1,9 +1,9 @@
 import z from "zod"
 
 export const profileSchema = z.object({
-  weight: z.number().positive(),
-  height: z.number().positive(),
-  age: z.number().positive(),
+  weight: z.coerce.number().positive(),
+  height: z.coerce.number().positive(),
+  age: z.coerce.number().positive(),
   sex: z.enum(["male", "female"]),
   activity_level: z.enum(["sedentary", "light", "moderate", "active"]),
   goal: z.enum(["lose_weight", "maintain", "gain_muscle"]),
