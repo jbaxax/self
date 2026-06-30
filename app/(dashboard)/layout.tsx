@@ -14,16 +14,24 @@ import {
   SidebarTrigger,
 } from "@/components/ui/sidebar"
 import { SessionUser } from "@/features/auth/domain/types"
-import { me } from "@/features/auth/infrastructure/authService.server"
-
+import { getProfile, me } from "@/features/auth/infrastructure/authService.server"
+import { redirect } from "next/navigation"
+  
 export default async function DashboardLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
   const supabaseUser = await me()
-  if (!supabaseUser) return <div>Usuario no autenticado</div>
+  //console.log("supabaseUser", supabaseUser)
+  if (!supabaseUser) redirect("/login")
   const user : SessionUser = { email: supabaseUser.email! }
+ 
+  const profile = await getProfile(supabaseUser.id)
+   if (!profile?.weight ) {
+     redirect("/profile")
+   }
+
   return (
     <SidebarProvider>
       <AppSidebar user={user} />

@@ -22,3 +22,9 @@ export async function updateUser(
     .single()
   return { data, error }
 }
+
+export async function getProfile(id:string){
+  const client = await createClient()
+  const {data} = await client.from("users").select().eq("id",id).single()
+  return data
+}

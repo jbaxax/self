@@ -157,6 +157,7 @@ export function AppSidebar({
 }: React.ComponentProps<typeof Sidebar> & {
   user: SessionUser
 }) {
+  
   return (
     <Sidebar {...props}>
       <SidebarHeader>
