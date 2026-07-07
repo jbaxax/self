@@ -10,7 +10,16 @@ export type CalorieInput = {
 }
 
 export type CalorieResult = {
-    bmr: number,
-    tdee:number,
-    target: number,
+  bmr: number
+  tdee: number
+  target: number
+}
+
+export type FoodInput = {
+  name: string
+  portion_desc: string
+  calories: number
+  protein?: number
+  carbs?: number
+  fat?: number
 }

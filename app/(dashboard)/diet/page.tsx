@@ -1,5 +1,28 @@
-export default function page() {
+import {
+  getProfile,
+  me,
+} from "@/features/auth/infrastructure/authService.server"
+import { calculateCalorieResult } from "@/features/diet/domain/calories"
+
+export default async function page() {
+  const supabaseUser = await me()
+  const profile = await getProfile(supabaseUser?.id!)
+
+  const calories = calculateCalorieResult({
+    weight: profile?.weight!,
+    height: profile?.height!,
+    age: profile?.age!,
+    sex: profile?.sex!,
+    activityLevel: profile?.activity_level!,
+    goal: profile?.goal!,
+  })
+
   return (
-    <div>page</div>
+    <div className="flex flex-col gap-4">
+      <h1 className="text-2xl font-bold">Diet</h1>
+      <p>Calories: {calories.target}</p>
+      <p>BMR: {calories.bmr}</p>
+      <p>TEE: {calories.tdee}</p>
+    </div>
   )
 }

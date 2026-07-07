@@ -27,6 +27,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
+import { useRouter } from "next/navigation"
 
 const activityLevel = [
   { label: "active", value: "active" },
@@ -47,6 +48,7 @@ const sex = [
 
 export default function ProfileForm({ userId }: { userId: string }) {
   const updateProfile = useUpdateProfile(userId)
+  const router = useRouter()
   const form = useForm<z.infer<typeof profileSchema>>({
     defaultValues: {
       weight: 0,
@@ -61,6 +63,8 @@ export default function ProfileForm({ userId }: { userId: string }) {
   async function onSubmit(data: z.infer<typeof profileSchema>) {
     try {
       const response = await updateProfile.mutateAsync(data)
+      
+      router.push("/diet")
       return response.data
     } catch (error) {
       toast.error(error instanceof Error ? error.message : "Error inesperado")

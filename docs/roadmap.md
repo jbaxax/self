@@ -21,12 +21,14 @@ Completar el perfil físico del usuario y calcular su meta calórica diaria
 - [x] DB: columna `sex` (enum `sex_type`) en `users`
 - [x] Dominio: tipos `CalorieInput` / `CalorieResult` (`domain/types.ts`)
 - [x] Dominio: cálculo BMR / TDEE / target + orquestadora (`domain/calories.ts`)
-- [ ] Infra: `profileService.updateProfile()` — UPDATE de `public.users`
-- [ ] Application: hook `useUpdateProfile` (mutation de TanStack Query)
-- [ ] Presentation: schema Zod del perfil
-- [ ] Presentation: `ProfileForm` (weight, height, age, sex, activityLevel, goal)
+- [x] Infra: `updateUser()` en `authService.server.ts` — UPDATE de `public.users`
+- [x] Infra: `getProfile()` en `authService.server.ts` — SELECT de `public.users`
+- [x] Application: hook `useUpdateProfile` (mutation de TanStack Query)
+- [x] Presentation: `profileSchema` con `z.coerce.number()` + `z.enum()`
+- [x] Presentation: `ProfileForm` (weight, height, age, sex, activityLevel, goal)
+- [x] Onboarding: `dashboard/layout.tsx` redirige a `/profile` si `weight` es null
+- [x] Onboarding: `/profile` movido fuera de `(dashboard)` — sin sidebar, sin loop infinito
 - [ ] Presentation: mostrar el desglose (bmr / tdee / target) en la UI
-- [ ] Onboarding: forzar completar el perfil antes del dashboard
 - [ ] Tests (vitest) del dominio de cálculo
 
 ## Rebanada 2 — Catálogo de alimentos (`foods`)
