@@ -35,9 +35,11 @@ Completar el perfil físico del usuario y calcular su meta calórica diaria
 
 Leer y buscar alimentos del sistema + propios, y crear alimentos personales.
 
-- [ ] Infra: `dietService` — listar / buscar foods (sistema + propios)
-- [ ] Application: hook `useFoods` (query)
-- [ ] Presentation: búsqueda de alimentos
+- [x] Infra: `dietService` — `searchFoods(query)` + `createFood(body)`
+- [x] Application: hook `useFoods(query)` (query) + `useCreateFood()` (mutation)
+- [x] Dominio: tipo `FoodInput` (`domain/types.ts`)
+- [x] Shared: hook `useDebounce<T>(value, delay)` (`hooks/useDebounce.ts`) — genérico, con cleanup vía `clearTimeout`
+- [ ] Presentation: búsqueda de alimentos (`FoodSearch`) — pendiente conectar `search` (useState) + `useDebounce` + `useFoods(debouncedSearch)` y renderizar resultados
 - [ ] Presentation: crear alimento personal (insert con `user_id`)
 
 ## Rebanada 3 — Registro diario (`meal_entries` + dashboard)
