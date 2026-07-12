@@ -39,7 +39,10 @@ Leer y buscar alimentos del sistema + propios, y crear alimentos personales.
 - [x] Application: hook `useFoods(query)` (query) + `useCreateFood()` (mutation)
 - [x] Dominio: tipo `FoodInput` (`domain/types.ts`)
 - [x] Shared: hook `useDebounce<T>(value, delay)` (`hooks/useDebounce.ts`) — genérico, con cleanup vía `clearTimeout`
-- [ ] Presentation: búsqueda de alimentos (`FoodSearch`) — pendiente conectar `search` (useState) + `useDebounce` + `useFoods(debouncedSearch)` y renderizar resultados
+- [x] Application: `enabled: !!query.trim()` en `useFoods` — evita fetch con búsqueda vacía o solo espacios
+- [x] Fix: `dietService.ts` tenía typo `"use serve"` en vez de `"use server"` — las Server Actions no eran invocables desde client, corregido
+- [x] Presentation: `FoodSearch` (`features/diet/presentation/components/FoodSearch.tsx`) — `search` (useState) + `useDebounce` + `useFoods(debouncedSearch)`, estados loading/error/vacío/lista con `<ul><li>`
+- [ ] Montar `FoodSearch` en una página y probar end-to-end en el browser
 - [ ] Presentation: crear alimento personal (insert con `user_id`)
 
 ## Rebanada 3 — Registro diario (`meal_entries` + dashboard)

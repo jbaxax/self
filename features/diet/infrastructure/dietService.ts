@@ -1,4 +1,4 @@
-"use serve"
+"use server"
 
 import { createClient } from "@/lib/supabase/server"
 import { Tables } from "@/lib/supabase/types"
