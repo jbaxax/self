@@ -6,6 +6,7 @@ export function useFoods(query: string) {
   return useQuery({
     queryFn: () => searchFoods(query),
     queryKey: [ "foods",query],
+    enabled: !!query.trim()
   })
 }
 
