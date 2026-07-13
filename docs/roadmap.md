@@ -9,7 +9,7 @@ antes de pasar a la siguiente.
 ## Estado general
 
 - [x] Auth (login / register)
-- [ ] Módulo Diet — en construcción (rebanada 1)
+- [ ] Módulo Diet — en construcción (rebanada 3, rebanadas 1 y 2 completas)
 
 ---
 
@@ -42,8 +42,10 @@ Leer y buscar alimentos del sistema + propios, y crear alimentos personales.
 - [x] Application: `enabled: !!query.trim()` en `useFoods` — evita fetch con búsqueda vacía o solo espacios
 - [x] Fix: `dietService.ts` tenía typo `"use serve"` en vez de `"use server"` — las Server Actions no eran invocables desde client, corregido
 - [x] Presentation: `FoodSearch` (`features/diet/presentation/components/FoodSearch.tsx`) — `search` (useState) + `useDebounce` + `useFoods(debouncedSearch)`, estados loading/error/vacío/lista con `<ul><li>`
-- [ ] Montar `FoodSearch` en una página y probar end-to-end en el browser
-- [ ] Presentation: crear alimento personal (insert con `user_id`)
+- [x] Montar `FoodSearch` en `app/(dashboard)/diet/page.tsx` — probado end-to-end, busca bien
+- [x] Instalado `Dialog` de shadcn (`components/ui/dialog.tsx`)
+- [x] `foodSchema.ts` (zod) siguiendo el patrón de `profileSchema.ts`
+- [x] Presentation: `CreateFoodDialog` — form (react-hook-form + zod) para crear alimento personal, usando `Dialog` directo (sin wrapper genérico — un solo caso de uso todavía, YAGNI). Probado end-to-end: crea y aparece en la búsqueda.
 
 ## Rebanada 3 — Registro diario (`meal_entries` + dashboard)
 
@@ -62,3 +64,8 @@ La pantalla principal: registrar comidas por tipo y fecha, ver totales vs meta.
 - [ ] Setup de testing (vitest)
 - [ ] Conocer el trigger que crea la fila en `public.users` al registrarse
 - [ ] Migraciones versionadas (`db pull`, requiere Docker)
+- [x] Fix `proxy.ts`: matcher excluía `/login` del middleware (por eso el redirect nunca corría) + guard clauses sin `return` explícito en todos los caminos (rompía el narrowing de `user: User | null`)
+- [ ] Refinar `proxy.ts` (post Rebanada 3):
+  - [ ] Evitar `getProfile()` en cada request — mover `profile_complete` a claim de sesión/JWT en vez de consultar la DB en cada navegación
+  - [ ] Acotar el `matcher` para que no corra sobre `/api/*` y assets estáticos
+  - [ ] `try/catch` alrededor de `me()` / `getProfile()` para no romper el sitio si Supabase falla
