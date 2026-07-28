@@ -23,3 +23,14 @@ export type FoodInput = {
   carbs?: number
   fat?: number
 }
+
+export type MealEntryInput = {
+  food_id: string,
+  meal_type_id: number,
+  quantity: number,
+  calories: number
+  protein?: number
+  carbs?: number
+  fat?:number,
+  log_date: string,
+}

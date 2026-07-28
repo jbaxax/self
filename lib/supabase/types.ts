@@ -1,4 +1,4 @@
-﻿export type Json =
+export type Json =
   | string
   | number
   | boolean
@@ -11,6 +11,31 @@ export type Database = {
   // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
   __InternalSupabase: {
     PostgrestVersion: "14.5"
+  }
+  graphql_public: {
+    Tables: {
+      [_ in never]: never
+    }
+    Views: {
+      [_ in never]: never
+    }
+    Functions: {
+      graphql: {
+        Args: {
+          extensions?: Json
+          operationName?: string
+          query?: string
+          variables?: Json
+        }
+        Returns: Json
+      }
+    }
+    Enums: {
+      [_ in never]: never
+    }
+    CompositeTypes: {
+      [_ in never]: never
+    }
   }
   public: {
     Tables: {
@@ -60,29 +85,41 @@ export type Database = {
       }
       meal_entries: {
         Row: {
+          calories: number
+          carbs: number | null
           created_at: string | null
+          fat: number | null
           food_id: string
           id: string
           log_date: string
           meal_type_id: number
+          protein: number | null
           quantity: number
           user_id: string
         }
         Insert: {
+          calories?: number
+          carbs?: number | null
           created_at?: string | null
+          fat?: number | null
           food_id: string
           id?: string
           log_date: string
           meal_type_id: number
+          protein?: number | null
           quantity?: number
           user_id: string
         }
         Update: {
+          calories?: number
+          carbs?: number | null
           created_at?: string | null
+          fat?: number | null
           food_id?: string
           id?: string
           log_date?: string
           meal_type_id?: number
+          protein?: number | null
           quantity?: number
           user_id?: string
         }
@@ -303,6 +340,9 @@ export type CompositeTypes<
     : never
 
 export const Constants = {
+  graphql_public: {
+    Enums: {},
+  },
   public: {
     Enums: {
       activity_level_type: ["sedentary", "light", "moderate", "active"],
