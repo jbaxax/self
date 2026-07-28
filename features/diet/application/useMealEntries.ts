@@ -6,7 +6,7 @@ export function useCreateMealEntry() {
     const queryClient = useQueryClient()
     return useMutation({
         mutationFn: (body: MealEntryInput) => createMealEntry(body),
-        onSuccess: () => queryClient.invalidateQueries({ queryKey: ["entries"] })
+        onSuccess: () => queryClient.invalidateQueries({ queryKey: ["mealEntries"] })
     })
 }
 

@@ -34,3 +34,10 @@ export type MealEntryInput = {
   fat?:number,
   log_date: string,
 }
+
+export type DailyTotals = {
+  calories: number,
+  protein:number,
+  carbs: number,
+  fat: number,
+}
