@@ -39,3 +39,12 @@ export async function createMealEntry(body: MealEntryInput): Promise<Tables<"mea
   if (!response.data) throw new Error("Failed to create meal entry")
   return response.data
 }
+
+export async function getDailyLog(logDate: string): Promise<Tables<"meal_entries">[]> {
+  const client = await createClient()
+  const response = await client
+    .from("meal_entries")
+    .select()
+    .eq("log_date", logDate)
+  return response.data ?? []
+}
