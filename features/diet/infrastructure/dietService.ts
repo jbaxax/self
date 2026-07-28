@@ -2,7 +2,7 @@
 
 import { createClient } from "@/lib/supabase/server"
 import { Tables } from "@/lib/supabase/types"
-import { FoodInput } from "../domain/types"
+import { FoodInput, MealEntryInput } from "../domain/types"
 import { me } from "@/features/auth/infrastructure/authService.server"
 
 export async function searchFoods(query: string): Promise<Tables<"foods">[]> {
@@ -24,5 +24,18 @@ export async function createFood(body: FoodInput): Promise<Tables<"foods">> {
     .single()
 
   if (!response.data) throw new Error("Failed to create food")
+  return response.data
+
+}
+export async function createMealEntry(body: MealEntryInput): Promise<Tables<"meal_entries">> {
+  const client = await createClient();
+  const user = await me()
+  const response = await client
+    .from("meal_entries")
+    .insert({ ...body, user_id: user!.id })
+    .select()
+    .single()
+
+  if (!response.data) throw new Error("Failed to create meal entry")
   return response.data
 }

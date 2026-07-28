@@ -5,7 +5,7 @@ import { FoodInput } from "../domain/types"
 export function useFoods(query: string) {
   return useQuery({
     queryFn: () => searchFoods(query),
-    queryKey: [ "foods",query],
+    queryKey: ["foods", query],
     enabled: !!query.trim()
   })
 }
@@ -17,3 +17,4 @@ export function useCreateFood() {
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ["foods"] }),
   })
 }
+
