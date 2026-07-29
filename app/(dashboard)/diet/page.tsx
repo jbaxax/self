@@ -4,6 +4,7 @@ import {
 } from "@/features/auth/infrastructure/authService.server"
 import { calculateCalorieResult } from "@/features/diet/domain/calories"
 import CreateFoodDialog from "@/features/diet/presentation/components/CreateFoodDialog"
+import DietDashboard from "@/features/diet/presentation/components/DietDashboard"
 import FoodSearch from "@/features/diet/presentation/components/FoodSearch"
 
 export default async function page() {
@@ -32,6 +33,9 @@ export default async function page() {
      </div>
       <div>
         <FoodSearch/>
+      </div>
+      <div>
+        <DietDashboard calorieTarget={calories.target}/>
       </div>
     </div>
   )

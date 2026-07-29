@@ -16,8 +16,8 @@ export default function FoodSearch() {
       <Input value={search} onChange={(v) => setSearch(v.target.value)} />
 
       {isLoading && <Spinner />}
-      {error && <p>Error al buscar</p>}
-      {data?.length === 0 && <p>No hay resultados</p>}
+      {error && <p>Error searching</p>}
+      {data?.length === 0 && <p>No results found</p>}
 
       <ul>
         {data?.map((food) => (
