@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { MealEntryInput } from "../domain/types"
-import { createMealEntry, getDailyLog } from "../infrastructure/dietService"
+import { createMealEntry, getDailyLog, getMealTypes } from "../infrastructure/dietService"
 
 export function useCreateMealEntry() {
     const queryClient = useQueryClient()
@@ -14,5 +14,12 @@ export function useDailyLog(logDate: string) {
   return useQuery({
     queryFn: () => getDailyLog(logDate),
     queryKey: ["mealEntries", logDate],
+  })
+}
+
+export function useMealTypes(){
+  return useQuery({
+    queryFn: getMealTypes,
+    queryKey: ["mealTypes"]
   })
 }

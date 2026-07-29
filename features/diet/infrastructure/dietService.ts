@@ -14,6 +14,14 @@ export async function searchFoods(query: string): Promise<Tables<"foods">[]> {
   return response.data ?? []
 }
 
+export async function getMealTypes(): Promise<Tables<"meal_types">[]>{
+  const client = await createClient()
+  const response = await client
+  .from("meal_types")
+  .select()
+  return response.data ?? []
+}
+
 export async function createFood(body: FoodInput): Promise<Tables<"foods">> {
   const client = await createClient()
   const user = await me()

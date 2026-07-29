@@ -1,4 +1,4 @@
-import { Enums } from "@/lib/supabase/types"
+import { Enums, Tables } from "@/lib/supabase/types"
 
 export type CalorieInput = {
   weight: number
@@ -31,13 +31,18 @@ export type MealEntryInput = {
   calories: number
   protein?: number
   carbs?: number
-  fat?:number,
+  fat?: number,
   log_date: string,
 }
 
 export type DailyTotals = {
   calories: number,
-  protein:number,
+  protein: number,
   carbs: number,
   fat: number,
+}
+
+export type MealGroup = {
+  mealType: Tables<"meal_types">, 
+  entries: Tables<"meal_entries">[]
 }
