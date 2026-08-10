@@ -25,7 +25,7 @@ export default function DietDashboard({ calorieTarget }: DietDashboardProps) {
       <DayOverview date={date} calorieTarget={calorieTarget} />
 
       {results.map((group) => (
-        <MealSection key={group.mealType.id} mealGroup={group} />
+        <MealSection key={group.mealType.id} mealGroup={group} date={date}/>
       ))}
     </div>
   )

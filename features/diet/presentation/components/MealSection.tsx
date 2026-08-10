@@ -1,10 +1,12 @@
 import { MealGroup } from "../../domain/types"
+import AddEntryDialog from "./AddEntryDialog"
 
 interface MealSectionProps {
-  mealGroup: MealGroup
+  mealGroup: MealGroup,
+  date:string
 }
 
-export default function MealSection({ mealGroup }: MealSectionProps) {
+export default function MealSection({ mealGroup,date }: MealSectionProps) {
   const title = mealGroup.mealType.name
   const entries = mealGroup.entries
   return (
@@ -16,6 +18,7 @@ export default function MealSection({ mealGroup }: MealSectionProps) {
           <li key={e.id}>{e.foods.name} - {e.quantity} - {e.calories} </li>
         ))}
       </ul>
+      <AddEntryDialog mealTypeId={mealGroup.mealType.id} date={date} />
     </div>
   )
 }

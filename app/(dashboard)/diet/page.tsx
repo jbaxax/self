@@ -5,7 +5,6 @@ import {
 import { calculateCalorieResult } from "@/features/diet/domain/calories"
 import CreateFoodDialog from "@/features/diet/presentation/components/CreateFoodDialog"
 import DietDashboard from "@/features/diet/presentation/components/DietDashboard"
-import FoodSearch from "@/features/diet/presentation/components/FoodSearch"
 
 export default async function page() {
   const supabaseUser = await me()
@@ -31,9 +30,6 @@ export default async function page() {
      <div>
       <CreateFoodDialog/>
      </div>
-      <div>
-        <FoodSearch/>
-      </div>
       <div>
         <DietDashboard calorieTarget={calories.target}/>
       </div>

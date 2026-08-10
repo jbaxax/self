@@ -4,8 +4,13 @@ import { useState } from "react"
 import { useFoods } from "../../application/useFoods"
 import { useDebounce } from "@/hooks/useDebounce"
 import { Spinner } from "@/components/ui/spinner"
+import { Tables } from "@/lib/supabase/types"
 
-export default function FoodSearch() {
+interface FoodSearchProps {
+  onSelect: (food: Tables<"foods">) => void
+}
+
+export default function FoodSearch({ onSelect }: FoodSearchProps) {
   const [search, setSearch] = useState("")
 
   const debouncedSearch = useDebounce(search, 300)
@@ -22,7 +27,9 @@ export default function FoodSearch() {
       <ul>
         {data?.map((food) => (
           <li key={food.id}>
-            {food.name} - {food.calories} cal
+            <button onClick={() => onSelect(food)} type="button">
+              {food.name} - {food.calories} cal
+            </button>
           </li>
         ))}
       </ul>
