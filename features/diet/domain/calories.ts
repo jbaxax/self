@@ -1,5 +1,5 @@
 import { Enums, Tables } from "@/lib/supabase/types"
-import { CalorieInput, CalorieResult, DailyTotals, MealEntryWithFood, MealGroup } from "./types"
+import { CalorieInput, CalorieResult, DailyTotals, Macros, MealEntryWithFood, MealGroup } from "./types"
 
 // Lookup table: the sex-based offset in the Mifflin-St Jeor formula
 const BMR_SEX_OFFSET: Record<Enums<"sex_type">, number> = {
@@ -76,4 +76,13 @@ export function groupEntriesByMealType(mealTypes: Tables<"meal_types">[],entries
    mealType: mealType,
    entries: entries.filter((entry) => mealType.id ===entry.meal_type_id)
   }))
+}
+
+export function scaleMacros(food: Tables<"foods">,quantity:number):Macros{
+  return {
+    calories: food.calories * quantity,
+    protein: (food.protein ?? 0) * quantity,
+    carbs: (food.carbs ?? 0) * quantity,
+    fat: (    food.fat ?? 0) * quantity
+  }
 }
