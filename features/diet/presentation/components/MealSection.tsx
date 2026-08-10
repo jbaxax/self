@@ -1,19 +1,21 @@
-"use client"
+import { MealGroup } from "../../domain/types"
 
-import { useDailyLog, useMealTypes } from "../../application/useMealEntries"
-import { groupEntriesByMealType } from "../../domain/calories"
-
-interface MealSectionProps{
-    date: string,
-
+interface MealSectionProps {
+  mealGroup: MealGroup
 }
 
-export default function MealSection({date,}:MealSectionProps) {
- const {data: entries = []} = useDailyLog(date)
- const {data: mealTypes = [] } = useMealTypes() 
-
- const results = groupEntriesByMealType(mealTypes,entries)
-    return (
-    <div>MealSection</div>
+export default function MealSection({ mealGroup }: MealSectionProps) {
+  const title = mealGroup.mealType.name
+  const entries = mealGroup.entries
+  return (
+    <div>
+      <h2>{title}</h2>
+      {entries.length === 0 && <p>No results</p>}
+      <ul>
+        {entries.map((e) => (
+          <li key={e.id}>{e.foods.name} - {e.quantity} - {e.calories} </li>
+        ))}
+      </ul>
+    </div>
   )
 }

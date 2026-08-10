@@ -2,7 +2,7 @@
 
 import { createClient } from "@/lib/supabase/server"
 import { Tables } from "@/lib/supabase/types"
-import { FoodInput, MealEntryInput } from "../domain/types"
+import { FoodInput, MealEntryInput, MealEntryWithFood, MealGroup } from "../domain/types"
 import { me } from "@/features/auth/infrastructure/authService.server"
 
 export async function searchFoods(query: string): Promise<Tables<"foods">[]> {
@@ -14,11 +14,11 @@ export async function searchFoods(query: string): Promise<Tables<"foods">[]> {
   return response.data ?? []
 }
 
-export async function getMealTypes(): Promise<Tables<"meal_types">[]>{
+export async function getMealTypes(): Promise<Tables<"meal_types">[]> {
   const client = await createClient()
   const response = await client
-  .from("meal_types")
-  .select()
+    .from("meal_types")
+    .select()
   return response.data ?? []
 }
 
@@ -48,11 +48,11 @@ export async function createMealEntry(body: MealEntryInput): Promise<Tables<"mea
   return response.data
 }
 
-export async function getDailyLog(logDate: string): Promise<Tables<"meal_entries">[]> {
+export async function getDailyLog(logDate: string): Promise<MealEntryWithFood[]> {
   const client = await createClient()
   const response = await client
     .from("meal_entries")
-    .select()
+    .select("*, foods(name)")
     .eq("log_date", logDate)
   return response.data ?? []
 }

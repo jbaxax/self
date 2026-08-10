@@ -43,6 +43,8 @@ export type DailyTotals = {
 }
 
 export type MealGroup = {
-  mealType: Tables<"meal_types">, 
-  entries: Tables<"meal_entries">[]
+  mealType: Tables<"meal_types">,
+  entries: MealEntryWithFood[]
 }
+
+export type MealEntryWithFood =  Tables<"meal_entries"> & { foods: { name: string } }
