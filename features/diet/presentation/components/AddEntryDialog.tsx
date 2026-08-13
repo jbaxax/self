@@ -14,6 +14,7 @@ import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { useCreateMealEntry } from "../../application/useMealEntries"
 import { scaleMacros } from "../../domain/calories"
+import { Spinner } from "@/components/ui/spinner"
 
 interface AddEntryDialogProps {
   mealTypeId: number
@@ -48,10 +49,10 @@ export default function AddEntryDialog({
 }
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger>Add food</DialogTrigger>
+      <DialogTrigger >Add food</DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>"Add food</DialogTitle>
+          <DialogTitle>Add food</DialogTitle>
           <DialogDescription>
       
           </DialogDescription>
@@ -73,7 +74,10 @@ export default function AddEntryDialog({
               />
             </div>
           )}
-          <Button type="submit">Save</Button>
+          <Button type="submit" disabled={createMealEntry.isPending}>
+            {createMealEntry.isPending && <Spinner/>}
+            Save
+          </Button>
         </form>
       </DialogContent>
     </Dialog>

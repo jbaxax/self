@@ -18,7 +18,7 @@ export default function DayOverview({date,calorieTarget}:DayOverviewProps) {
      {error && <p>Error loading day</p>}
      {data?.length === 0 && <p>No entries logged for this day</p>}
      {(data?.length ?? 0) > 0   && 
-         <p>{totals.calories} VS {calorieTarget}</p>
+         <p>{Math.round(totals.calories)} VS {Math.round(calorieTarget)}</p>
      }
     </div>
   )
