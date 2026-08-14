@@ -21,10 +21,13 @@ import {
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { useState } from "react"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { Spinner } from "@/components/ui/spinner"
 export default function CreateFoodDialog() {
-  const [open,setOpen] = useState(false);
+  const [open, setOpen] = useState(false)
   const createFood = useCreateFood()
   const form = useForm<z.infer<typeof foodSchema>>({
+    resolver: zodResolver(foodSchema),
     defaultValues: {
       calories: 0,
       carbs: 0,
@@ -38,7 +41,7 @@ export default function CreateFoodDialog() {
   async function onSubmit(data: z.infer<typeof foodSchema>) {
     try {
       const response = await createFood.mutateAsync(data)
-      setOpen(false);
+      setOpen(false)
       form.reset()
       return response
     } catch (error) {
@@ -50,11 +53,8 @@ export default function CreateFoodDialog() {
       <DialogTrigger>Create Food</DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Create Fodd</DialogTitle>
-          <DialogDescription>
-            This action cannot be undone. This will permanently delete your
-            account and remove your data from our servers.
-          </DialogDescription>
+          <DialogTitle>Create Food</DialogTitle>
+          <DialogDescription>Add a food to your library. Enter the nutrition values for one portion.</DialogDescription>
 
           <form id="form-food" onSubmit={form.handleSubmit(onSubmit)}>
             <FieldGroup>
@@ -63,12 +63,12 @@ export default function CreateFoodDialog() {
                 control={form.control}
                 render={({ field, fieldState }) => (
                   <Field data-invalid={fieldState.invalid}>
-                    <FieldLabel>Name</FieldLabel>
+                    <FieldLabel htmlFor="name">Name</FieldLabel>
                     <Input
                       {...field}
-                      id="form-food"
+                      id="name"
                       aria-invalid={fieldState.invalid}
-                      placeholder="Type calories"
+                      placeholder="Type name"
                     />
                     {fieldState.invalid && (
                       <FieldError errors={[fieldState.error]} />
@@ -81,10 +81,10 @@ export default function CreateFoodDialog() {
                 control={form.control}
                 render={({ field, fieldState }) => (
                   <Field data-invalid={fieldState.invalid}>
-                    <FieldLabel>Portion</FieldLabel>
+                    <FieldLabel htmlFor="portion">Portion</FieldLabel>
                     <Input
                       {...field}
-                      id="form-food"
+                      id="portion"
                       aria-invalid={fieldState.invalid}
                       placeholder="Type portion"
                     />
@@ -99,13 +99,14 @@ export default function CreateFoodDialog() {
                 control={form.control}
                 render={({ field, fieldState }) => (
                   <Field data-invalid={fieldState.invalid}>
-                    <FieldLabel>Calories</FieldLabel>
+                    <FieldLabel htmlFor="calories">Calories</FieldLabel>
                     <Input
                       {...field}
-                      id="form-food"
+                      id="calories"
                       aria-invalid={fieldState.invalid}
                       placeholder="Type calories"
                       type="number"
+                      onChange={(e) => field.onChange(e.target.valueAsNumber)}
                     />
                     {fieldState.invalid && (
                       <FieldError errors={[fieldState.error]} />
@@ -118,13 +119,14 @@ export default function CreateFoodDialog() {
                 control={form.control}
                 render={({ field, fieldState }) => (
                   <Field data-invalid={fieldState.invalid}>
-                    <FieldLabel>Carbs</FieldLabel>
+                    <FieldLabel htmlFor="carbs">Carbs</FieldLabel>
                     <Input
                       {...field}
-                      id="form-food"
+                      id="carbs"
                       aria-invalid={fieldState.invalid}
                       placeholder="Type carbs"
                       type="number"
+                      onChange={(e) => field.onChange(e.target.valueAsNumber)}
                     />
                     {fieldState.invalid && (
                       <FieldError errors={[fieldState.error]} />
@@ -137,13 +139,14 @@ export default function CreateFoodDialog() {
                 control={form.control}
                 render={({ field, fieldState }) => (
                   <Field data-invalid={fieldState.invalid}>
-                    <FieldLabel>Fat</FieldLabel>
+                    <FieldLabel htmlFor="fat">Fat</FieldLabel>
                     <Input
                       {...field}
-                      id="form-food"
+                      id="fat"
                       aria-invalid={fieldState.invalid}
                       placeholder="Type fat"
                       type="number"
+                      onChange={(e) => field.onChange(e.target.valueAsNumber)}
                     />
                     {fieldState.invalid && (
                       <FieldError errors={[fieldState.error]} />
@@ -156,13 +159,14 @@ export default function CreateFoodDialog() {
                 control={form.control}
                 render={({ field, fieldState }) => (
                   <Field data-invalid={fieldState.invalid}>
-                    <FieldLabel>Protein</FieldLabel>
+                    <FieldLabel htmlFor="protein">Protein</FieldLabel>
                     <Input
                       {...field}
-                      id="form-food"
+                      id="protein"
                       aria-invalid={fieldState.invalid}
                       placeholder="Type protein"
                       type="number"
+                      onChange={(e) => field.onChange(e.target.valueAsNumber)}
                     />
                     {fieldState.invalid && (
                       <FieldError errors={[fieldState.error]} />
@@ -171,7 +175,8 @@ export default function CreateFoodDialog() {
                 )}
               />
 
-              <Button type="submit">
+              <Button type="submit" disabled={createFood.isPending}>
+                {createFood.isPending && <Spinner />}
                 Save
               </Button>
             </FieldGroup>
