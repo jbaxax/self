@@ -30,11 +30,8 @@ export default function CreateFoodDialog() {
     resolver: zodResolver(foodSchema),
     defaultValues: {
       calories: 0,
-      carbs: 0,
-      fat: 0,
       name: "",
       portion_desc: "",
-      protein: 0,
     },
   })
 
@@ -54,7 +51,10 @@ export default function CreateFoodDialog() {
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Create Food</DialogTitle>
-          <DialogDescription>Add a food to your library. Enter the nutrition values for one portion.</DialogDescription>
+          <DialogDescription>
+            Add a food to your library. Enter the nutrition values for one
+            portion.
+          </DialogDescription>
 
           <form id="form-food" onSubmit={form.handleSubmit(onSubmit)}>
             <FieldGroup>
@@ -122,11 +122,15 @@ export default function CreateFoodDialog() {
                     <FieldLabel htmlFor="carbs">Carbs</FieldLabel>
                     <Input
                       {...field}
+                      value={field.value ?? ""}
                       id="carbs"
                       aria-invalid={fieldState.invalid}
                       placeholder="Type carbs"
                       type="number"
-                      onChange={(e) => field.onChange(e.target.valueAsNumber)}
+                      onChange={(e) => {
+                        const value = e.target.valueAsNumber
+                        field.onChange(Number.isNaN(value) ? undefined : value)
+                      }}
                     />
                     {fieldState.invalid && (
                       <FieldError errors={[fieldState.error]} />
@@ -142,11 +146,15 @@ export default function CreateFoodDialog() {
                     <FieldLabel htmlFor="fat">Fat</FieldLabel>
                     <Input
                       {...field}
+                      value={field.value ?? ""}
                       id="fat"
                       aria-invalid={fieldState.invalid}
                       placeholder="Type fat"
                       type="number"
-                      onChange={(e) => field.onChange(e.target.valueAsNumber)}
+                      onChange={(e) => {
+                        const value = e.target.valueAsNumber
+                        field.onChange(Number.isNaN(value) ? undefined : value)
+                      }}
                     />
                     {fieldState.invalid && (
                       <FieldError errors={[fieldState.error]} />
@@ -162,11 +170,15 @@ export default function CreateFoodDialog() {
                     <FieldLabel htmlFor="protein">Protein</FieldLabel>
                     <Input
                       {...field}
+                      value={field.value ?? ""}
                       id="protein"
                       aria-invalid={fieldState.invalid}
                       placeholder="Type protein"
                       type="number"
-                      onChange={(e) => field.onChange(e.target.valueAsNumber)}
+                      onChange={(e) => {
+                        const value = e.target.valueAsNumber
+                        field.onChange(Number.isNaN(value) ? undefined : value)
+                      }}
                     />
                     {fieldState.invalid && (
                       <FieldError errors={[fieldState.error]} />
