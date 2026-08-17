@@ -23,9 +23,9 @@ export default async function page() {
     <div className="flex flex-col gap-4">
       <div>
         <h1 className="text-2xl font-bold">Diet</h1>
-        <p>Calories: {calories.target}</p>
-        <p>BMR: {calories.bmr}</p>
-        <p>TEE: {calories.tdee}</p>
+        <p>Calories: {Math.round(calories.target)}</p>
+        <p>BMR: {Math.round(calories.bmr)}</p>
+        <p>TEE: {Math.round(calories.tdee)}</p>
       </div>
      <div>
       <CreateFoodDialog/>
