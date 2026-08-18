@@ -85,7 +85,7 @@ export default function ProfileForm({ userId }: { userId: string }) {
                 control={form.control}
                 render={({ field, fieldState }) => (
                   <Field data-invalid={fieldState.invalid}>
-                    <FieldLabel>Weight</FieldLabel>
+                    <FieldLabel>Weight (kg)</FieldLabel>
                     <Input
                       {...field}
                       id="form-login"
@@ -104,7 +104,7 @@ export default function ProfileForm({ userId }: { userId: string }) {
                 control={form.control}
                 render={({ field, fieldState }) => (
                   <Field data-invalid={fieldState.invalid}>
-                    <FieldLabel>Height</FieldLabel>
+                    <FieldLabel>Height (cm)</FieldLabel>
                     <Input
                       {...field}
                       id="form-login"
