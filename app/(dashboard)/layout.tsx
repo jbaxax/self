@@ -1,12 +1,4 @@
 import { AppSidebar } from "@/components/shared/app-sidebar"
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb"
 import { Separator } from "@/components/ui/separator"
 import {
   SidebarInset,
@@ -14,47 +6,39 @@ import {
   SidebarTrigger,
 } from "@/components/ui/sidebar"
 import { SessionUser } from "@/features/auth/domain/types"
-import { getProfile, me } from "@/features/auth/infrastructure/authService.server"
+import {
+  getProfile,
+  me,
+} from "@/features/auth/infrastructure/authService.server"
 import { redirect } from "next/navigation"
-  
+
 export default async function DashboardLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
   const supabaseUser = await me()
-  //console.log("supabaseUser", supabaseUser)
   if (!supabaseUser) redirect("/login")
-  const user : SessionUser = { email: supabaseUser.email! }
- 
+
+  const user: SessionUser = { email: supabaseUser.email! }
   const profile = await getProfile(supabaseUser.id)
-   if (!profile?.weight ) {
-     redirect("/profile")
-   }
+  if (!profile?.weight) redirect("/profile")
 
   return (
     <SidebarProvider>
       <AppSidebar user={user} />
       <SidebarInset>
-        <header className="flex h-16 shrink-0 items-center gap-2 border-b px-4">
+        <header className="bg-background/80 sticky top-0 z-10 flex h-14 shrink-0 items-center gap-2 border-b px-4 backdrop-blur">
           <SidebarTrigger className="-ml-1" />
           <Separator
             orientation="vertical"
-            className="mr-2 data-[orientation=vertical]:h-4"
+            className="mr-1 data-[orientation=vertical]:h-4"
           />
-          <Breadcrumb>
-            <BreadcrumbList>
-              <BreadcrumbItem className="hidden md:block">
-                <BreadcrumbLink href="/diet">Diet</BreadcrumbLink>
-              </BreadcrumbItem>
-              <BreadcrumbSeparator className="hidden md:block" />
-              <BreadcrumbItem>
-                <BreadcrumbPage>Daily Log</BreadcrumbPage>
-              </BreadcrumbItem>
-            </BreadcrumbList>
-          </Breadcrumb>
+          <span className="text-sm font-medium">Daily Log</span>
         </header>
-        {children}
+        <div className="mx-auto w-full max-w-3xl px-4 py-6 sm:px-6 sm:py-8">
+          {children}
+        </div>
       </SidebarInset>
     </SidebarProvider>
   )

@@ -1,4 +1,6 @@
 import * as React from "react"
+import { CalendarDays, Settings2 } from "lucide-react"
+import Link from "next/link"
 
 import {
   Sidebar,
@@ -15,36 +17,17 @@ import {
 } from "@/components/ui/sidebar"
 import { NavUser } from "./nav-user"
 import { SessionUser } from "@/features/auth/domain/types"
-import Link from "next/link"
 
-const data = {
-  navMain: [
-    {
-      title: "Diet",
-      url: "#",
-      items: [
-        {
-          title: "Daily Log",
-          url: "/diet",
-        },
-      
-      ],
-    },
-    {
-      title: "Config",
-      url: "#",
-      items: [
-        {
-          title: "Profile",
-          url: "/profile",
-        },
-        
-      ],
-    },
-   
-  
-  ],
-}
+const navMain = [
+  {
+    title: "Diet",
+    items: [{ title: "Daily Log", url: "/diet", icon: CalendarDays }],
+  },
+  {
+    title: "Config",
+    items: [{ title: "Profile", url: "/profile", icon: Settings2 }],
+  },
+]
 
 export function AppSidebar({
   user,
@@ -52,20 +35,19 @@ export function AppSidebar({
 }: React.ComponentProps<typeof Sidebar> & {
   user: SessionUser
 }) {
-  
   return (
-    <Sidebar {...props}>
+    <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton asChild size="lg">
               <Link href="/diet">
-                <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
+                <div className="bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-md">
                   <span className="text-sm font-semibold">S</span>
                 </div>
                 <div className="flex flex-col gap-0.5 leading-none">
                   <span className="font-semibold">self</span>
-                  <span className="text-xs text-muted-foreground">
+                  <span className="text-muted-foreground text-xs">
                     Health tracker
                   </span>
                 </div>
@@ -75,15 +57,18 @@ export function AppSidebar({
         </SidebarMenu>
       </SidebarHeader>
       <SidebarContent>
-        {data.navMain.map((item) => (
-          <SidebarGroup key={item.title}>
-            <SidebarGroupLabel>{item.title}</SidebarGroupLabel>
+        {navMain.map((group) => (
+          <SidebarGroup key={group.title}>
+            <SidebarGroupLabel>{group.title}</SidebarGroupLabel>
             <SidebarGroupContent>
               <SidebarMenu>
-                {item.items.map((item) => (
+                {group.items.map((item) => (
                   <SidebarMenuItem key={item.title}>
-                    <SidebarMenuButton asChild >
-                      <Link href={item.url}>{item.title}</Link>
+                    <SidebarMenuButton asChild tooltip={item.title}>
+                      <Link href={item.url}>
+                        <item.icon />
+                        <span>{item.title}</span>
+                      </Link>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
                 ))}
@@ -92,10 +77,10 @@ export function AppSidebar({
           </SidebarGroup>
         ))}
       </SidebarContent>
-      <SidebarRail />
       <SidebarFooter>
         <NavUser user={user} />
       </SidebarFooter>
+      <SidebarRail />
     </Sidebar>
   )
 }

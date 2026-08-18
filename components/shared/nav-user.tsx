@@ -1,19 +1,12 @@
 "use client"
 
-import {
-  BadgeCheck,
-  Bell,
-  ChevronsUpDown,
-  CreditCard,
-  LogOut,
-  Sparkles,
-} from "lucide-react"
+import { ChevronsUpDown, LogOut, User } from "lucide-react"
+import Link from "next/link"
 
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
@@ -28,10 +21,15 @@ import {
 import { SessionUser } from "@/features/auth/domain/types"
 import { useLogout } from "@/features/auth/application/useLogout"
 
+function getInitials(email: string): string {
+  return email.slice(0, 2).toUpperCase()
+}
+
 export function NavUser({ user }: { user: SessionUser }) {
   const { isMobile } = useSidebar()
- 
-  const logout = useLogout();
+  const logout = useLogout()
+  const initials = getInitials(user.email)
+
   return (
     <SidebarMenu>
       <SidebarMenuItem>
@@ -41,15 +39,15 @@ export function NavUser({ user }: { user: SessionUser }) {
               size="lg"
               className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
             >
-              <Avatar className="h-8 w-8 rounded-lg">
-                {/* <AvatarImage src={user.avatar} alt={user.name} /> */}
-                <AvatarFallback className="rounded-lg">CN</AvatarFallback>
+              <Avatar className="size-8 rounded-md">
+                <AvatarFallback className="rounded-md text-xs">
+                  {initials}
+                </AvatarFallback>
               </Avatar>
-              <div className="grid flex-1 text-left text-sm leading-tight">
-                {/* <span className="truncate font-medium">{user.name}</span> */}
-                <span className="truncate text-xs">{user.email}</span>
-              </div>
-              <ChevronsUpDown className="ml-auto size-4" />
+              <span className="flex-1 truncate text-left text-sm">
+                {user.email}
+              </span>
+              <ChevronsUpDown className="ml-auto size-4 opacity-60" />
             </SidebarMenuButton>
           </DropdownMenuTrigger>
           <DropdownMenuContent
@@ -58,40 +56,16 @@ export function NavUser({ user }: { user: SessionUser }) {
             align="end"
             sideOffset={4}
           >
-            <DropdownMenuLabel className="p-0 font-normal">
-              <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
-                <Avatar className="h-8 w-8 rounded-lg">
-                  {/* <AvatarImage src={user.avatar} alt={user.name} /> */}
-                  <AvatarFallback className="rounded-lg">CN</AvatarFallback>
-                </Avatar>
-                <div className="grid flex-1 text-left text-sm leading-tight">
-                  {/* <span className="truncate font-medium">{user.name}</span> */}
-                  <span className="truncate text-xs">{user.email}</span>
-                </div>
-              </div>
+            <DropdownMenuLabel className="text-muted-foreground truncate text-xs font-normal">
+              {user.email}
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuGroup>
-              <DropdownMenuItem>
-                <Sparkles />
-                Upgrade to Pro
-              </DropdownMenuItem>
-            </DropdownMenuGroup>
-            <DropdownMenuSeparator />
-            <DropdownMenuGroup>
-              <DropdownMenuItem>
-                <BadgeCheck />
-                Account
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <CreditCard />
-                Billing
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <Bell />
-                Notifications
-              </DropdownMenuItem>
-            </DropdownMenuGroup>
+            <DropdownMenuItem asChild>
+              <Link href="/profile">
+                <User />
+                Profile
+              </Link>
+            </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem onClick={logout}>
               <LogOut />

@@ -1,8 +1,10 @@
 "use client"
+
 import {
   Dialog,
   DialogContent,
   DialogDescription,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -12,17 +14,20 @@ import { Controller, useForm } from "react-hook-form"
 import z from "zod"
 import { foodSchema } from "../schemas/foodSchema"
 import { toast } from "sonner"
-import {
-  Field,
-  FieldError,
-  FieldGroup,
-  FieldLabel,
-} from "@/components/ui/field"
+import { Field, FieldError, FieldGroup, FieldLabel } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { useState } from "react"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Spinner } from "@/components/ui/spinner"
+import { Plus } from "lucide-react"
+
+const macroFields = [
+  { name: "protein", label: "Protein (g)" },
+  { name: "carbs", label: "Carbs (g)" },
+  { name: "fat", label: "Fat (g)" },
+] as const
+
 export default function CreateFoodDialog() {
   const [open, setOpen] = useState(false)
   const createFood = useCreateFood()
@@ -42,40 +47,49 @@ export default function CreateFoodDialog() {
       form.reset()
       return response
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : "Error inesperado")
+      toast.error(error instanceof Error ? error.message : "Unexpected error")
     }
   }
+
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger>Create Food</DialogTrigger>
+      <DialogTrigger asChild>
+        <Button variant="outline" size="sm">
+          <Plus />
+          New food
+        </Button>
+      </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Create Food</DialogTitle>
+          <DialogTitle>Create food</DialogTitle>
           <DialogDescription>
             Add a food to your library. Enter the nutrition values for one
             portion.
           </DialogDescription>
+        </DialogHeader>
 
-          <form id="form-food" onSubmit={form.handleSubmit(onSubmit)}>
-            <FieldGroup>
-              <Controller
-                name="name"
-                control={form.control}
-                render={({ field, fieldState }) => (
-                  <Field data-invalid={fieldState.invalid}>
-                    <FieldLabel htmlFor="name">Name</FieldLabel>
-                    <Input
-                      {...field}
-                      id="name"
-                      aria-invalid={fieldState.invalid}
-                      placeholder="Type name"
-                    />
-                    {fieldState.invalid && (
-                      <FieldError errors={[fieldState.error]} />
-                    )}
-                  </Field>
-                )}
-              />
+        <form id="form-food" onSubmit={form.handleSubmit(onSubmit)}>
+          <FieldGroup>
+            <Controller
+              name="name"
+              control={form.control}
+              render={({ field, fieldState }) => (
+                <Field data-invalid={fieldState.invalid}>
+                  <FieldLabel htmlFor="name">Name</FieldLabel>
+                  <Input
+                    {...field}
+                    id="name"
+                    aria-invalid={fieldState.invalid}
+                    placeholder="Chicken breast"
+                  />
+                  {fieldState.invalid && (
+                    <FieldError errors={[fieldState.error]} />
+                  )}
+                </Field>
+              )}
+            />
+
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <Controller
                 name="portion_desc"
                 control={form.control}
@@ -86,7 +100,7 @@ export default function CreateFoodDialog() {
                       {...field}
                       id="portion"
                       aria-invalid={fieldState.invalid}
-                      placeholder="Type portion"
+                      placeholder="100 g"
                     />
                     {fieldState.invalid && (
                       <FieldError errors={[fieldState.error]} />
@@ -104,7 +118,7 @@ export default function CreateFoodDialog() {
                       {...field}
                       id="calories"
                       aria-invalid={fieldState.invalid}
-                      placeholder="Type calories"
+                      placeholder="165"
                       type="number"
                       onChange={(e) => field.onChange(e.target.valueAsNumber)}
                     />
@@ -114,86 +128,48 @@ export default function CreateFoodDialog() {
                   </Field>
                 )}
               />
-              <Controller
-                name="carbs"
-                control={form.control}
-                render={({ field, fieldState }) => (
-                  <Field data-invalid={fieldState.invalid}>
-                    <FieldLabel htmlFor="carbs">Carbs</FieldLabel>
-                    <Input
-                      {...field}
-                      value={field.value ?? ""}
-                      id="carbs"
-                      aria-invalid={fieldState.invalid}
-                      placeholder="Type carbs"
-                      type="number"
-                      onChange={(e) => {
-                        const value = e.target.valueAsNumber
-                        field.onChange(Number.isNaN(value) ? undefined : value)
-                      }}
-                    />
-                    {fieldState.invalid && (
-                      <FieldError errors={[fieldState.error]} />
-                    )}
-                  </Field>
-                )}
-              />
-              <Controller
-                name="fat"
-                control={form.control}
-                render={({ field, fieldState }) => (
-                  <Field data-invalid={fieldState.invalid}>
-                    <FieldLabel htmlFor="fat">Fat</FieldLabel>
-                    <Input
-                      {...field}
-                      value={field.value ?? ""}
-                      id="fat"
-                      aria-invalid={fieldState.invalid}
-                      placeholder="Type fat"
-                      type="number"
-                      onChange={(e) => {
-                        const value = e.target.valueAsNumber
-                        field.onChange(Number.isNaN(value) ? undefined : value)
-                      }}
-                    />
-                    {fieldState.invalid && (
-                      <FieldError errors={[fieldState.error]} />
-                    )}
-                  </Field>
-                )}
-              />
-              <Controller
-                name="protein"
-                control={form.control}
-                render={({ field, fieldState }) => (
-                  <Field data-invalid={fieldState.invalid}>
-                    <FieldLabel htmlFor="protein">Protein</FieldLabel>
-                    <Input
-                      {...field}
-                      value={field.value ?? ""}
-                      id="protein"
-                      aria-invalid={fieldState.invalid}
-                      placeholder="Type protein"
-                      type="number"
-                      onChange={(e) => {
-                        const value = e.target.valueAsNumber
-                        field.onChange(Number.isNaN(value) ? undefined : value)
-                      }}
-                    />
-                    {fieldState.invalid && (
-                      <FieldError errors={[fieldState.error]} />
-                    )}
-                  </Field>
-                )}
-              />
+            </div>
 
-              <Button type="submit" disabled={createFood.isPending}>
-                {createFood.isPending && <Spinner />}
-                Save
-              </Button>
-            </FieldGroup>
-          </form>
-        </DialogHeader>
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+              {macroFields.map((macro) => (
+                <Controller
+                  key={macro.name}
+                  name={macro.name}
+                  control={form.control}
+                  render={({ field, fieldState }) => (
+                    <Field data-invalid={fieldState.invalid}>
+                      <FieldLabel htmlFor={macro.name}>
+                        {macro.label}
+                      </FieldLabel>
+                      <Input
+                        {...field}
+                        value={field.value ?? ""}
+                        id={macro.name}
+                        aria-invalid={fieldState.invalid}
+                        placeholder="0"
+                        type="number"
+                        onChange={(e) => {
+                          const value = e.target.valueAsNumber
+                          field.onChange(Number.isNaN(value) ? undefined : value)
+                        }}
+                      />
+                      {fieldState.invalid && (
+                        <FieldError errors={[fieldState.error]} />
+                      )}
+                    </Field>
+                  )}
+                />
+              ))}
+            </div>
+          </FieldGroup>
+
+          <DialogFooter className="mt-6">
+            <Button type="submit" disabled={createFood.isPending}>
+              {createFood.isPending && <Spinner />}
+              Save
+            </Button>
+          </DialogFooter>
+        </form>
       </DialogContent>
     </Dialog>
   )

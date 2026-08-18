@@ -1,4 +1,5 @@
 "use client"
+
 import { Input } from "@/components/ui/input"
 import { useState } from "react"
 import { useFoods } from "../../application/useFoods"
@@ -12,27 +13,49 @@ interface FoodSearchProps {
 
 export default function FoodSearch({ onSelect }: FoodSearchProps) {
   const [search, setSearch] = useState("")
-
   const debouncedSearch = useDebounce(search, 300)
-
   const { data, isLoading, error } = useFoods(debouncedSearch)
+
   return (
-    <div>
-      <Input value={search} onChange={(v) => setSearch(v.target.value)} />
+    <div className="flex flex-col gap-3">
+      <Input
+        value={search}
+        placeholder="Search food"
+        onChange={(v) => setSearch(v.target.value)}
+      />
 
-      {isLoading && <Spinner />}
-      {error && <p>Error searching</p>}
-      {data?.length === 0 && <p>No results found</p>}
+      {isLoading && (
+        <div className="flex h-24 items-center justify-center">
+          <Spinner />
+        </div>
+      )}
 
-      <ul>
-        {data?.map((food) => (
-          <li key={food.id}>
-            <button onClick={() => onSelect(food)} type="button">
-              {food.name} - {food.calories} cal
-            </button>
-          </li>
-        ))}
-      </ul>
+      {error && <p className="text-destructive text-sm">Error searching.</p>}
+
+      {data?.length === 0 && (
+        <p className="text-muted-foreground py-6 text-center text-sm">
+          No results found.
+        </p>
+      )}
+
+      {(data?.length ?? 0) > 0 && (
+        <ul className="max-h-64 divide-y overflow-y-auto rounded-md border">
+          {data?.map((food) => (
+            <li key={food.id}>
+              <button
+                type="button"
+                onClick={() => onSelect(food)}
+                className="hover:bg-accent flex w-full items-center justify-between gap-3 px-3 py-2.5 text-left transition-colors"
+              >
+                <span className="truncate text-sm">{food.name}</span>
+                <span className="text-muted-foreground text-xs tabular-nums">
+                  {food.calories} kcal
+                </span>
+              </button>
+            </li>
+          ))}
+        </ul>
+      )}
     </div>
   )
 }

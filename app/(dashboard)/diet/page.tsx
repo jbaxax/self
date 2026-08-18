@@ -20,19 +20,17 @@ export default async function page() {
   })
 
   return (
-    <div className="flex flex-col gap-4">
-      <div>
-        <h1 className="text-2xl font-bold">Diet</h1>
-        <p>Calories: {Math.round(calories.target)}</p>
-        <p>BMR: {Math.round(calories.bmr)}</p>
-        <p>TEE: {Math.round(calories.tdee)}</p>
+    <div className="flex flex-col gap-6">
+      <div className="flex items-start justify-between gap-4">
+        <div className="space-y-1">
+          <h1 className="text-xl font-semibold tracking-tight">Daily Log</h1>
+          <p className="text-muted-foreground text-sm">
+            What you ate today, and how it adds up.
+          </p>
+        </div>
+        <CreateFoodDialog />
       </div>
-     <div>
-      <CreateFoodDialog/>
-     </div>
-      <div>
-        <DietDashboard calorieTarget={calories.target}/>
-      </div>
+      <DietDashboard calories={calories} />
     </div>
   )
 }
