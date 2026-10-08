@@ -48,6 +48,17 @@ export async function createMealEntry(body: MealEntryInput): Promise<Tables<"mea
   return response.data
 }
 
+export async function deleteMealEntry(id: string): Promise<void> {
+  const client = await createClient()
+  const response = await client
+    .from("meal_entries")
+    .delete()
+    .eq("id", id)
+    .select("id")
+
+  if (response.error || !response.data?.length) throw new Error("Failed to delete meal entry")
+}
+
 export async function getDailyLog(logDate: string): Promise<MealEntryWithFood[]> {
   const client = await createClient()
   const response = await client

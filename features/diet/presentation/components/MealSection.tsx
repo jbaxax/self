@@ -1,6 +1,7 @@
 import { calculateDailyTotals } from "../../domain/calories"
 import { MealGroup } from "../../domain/types"
 import AddEntryDialog from "./AddEntryDialog"
+import DeleteEntryButton from "./DeleteEntryButton"
 
 interface MealSectionProps {
   mealGroup: MealGroup
@@ -35,9 +36,12 @@ export default function MealSection({ mealGroup, date }: MealSectionProps) {
                   × {entry.quantity}
                 </p>
               </div>
-              <span className="text-muted-foreground text-sm tabular-nums">
-                {Math.round(entry.calories)}
-              </span>
+              <div className="flex items-center gap-1">
+                <span className="text-muted-foreground text-sm tabular-nums">
+                  {Math.round(entry.calories)}
+                </span>
+                <DeleteEntryButton entryId={entry.id} />
+              </div>
             </li>
           ))}
         </ul>
