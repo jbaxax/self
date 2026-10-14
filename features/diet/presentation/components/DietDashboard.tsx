@@ -7,6 +7,7 @@ import DayOverview from "./DayOverview"
 import { useDailyLog, useMealTypes } from "../../application/useMealEntries"
 import { groupEntriesByMealType } from "../../domain/calories"
 import MealSection from "./MealSection"
+import LogMealsDialog from "./LogMealsDialog"
 import { CalorieResult } from "../../domain/types"
 
 interface DietDashboardProps {
@@ -25,6 +26,7 @@ export default function DietDashboard({ calories }: DietDashboardProps) {
     <div className="flex flex-col gap-4">
       <DateSelector date={date} onDateChange={setDate} />
       <DayOverview date={date} calories={calories} />
+      <LogMealsDialog date={date} />
       <div className="flex flex-col gap-3">
         {results.map((group) => (
           <MealSection key={group.mealType.id} mealGroup={group} date={date} />

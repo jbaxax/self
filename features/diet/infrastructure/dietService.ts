@@ -4,6 +4,7 @@ import { createClient } from "@/lib/supabase/server"
 import { Tables } from "@/lib/supabase/types"
 import { FoodInput, MealEntryInput, MealEntryWithFood, MealGroup } from "../domain/types"
 import { me } from "@/features/auth/infrastructure/authService.server"
+import { ParsedMeals, parsedMealsSchema } from "../domain/parsedMeals"
 
 export async function searchFoods(query: string): Promise<Tables<"foods">[]> {
   const client = await createClient()
@@ -46,6 +47,17 @@ export async function createMealEntry(body: MealEntryInput): Promise<Tables<"mea
 
   if (!response.data) throw new Error("Failed to create meal entry")
   return response.data
+}
+
+export async function logMeals(logDate: string, meals: ParsedMeals): Promise<void> {
+  const validMeals = parsedMealsSchema.parse(meals)
+  const client = await createClient()
+  const response = await client.rpc("log_meals", {
+    p_log_date: logDate,
+    p_meals: validMeals,
+  })
+
+  if (response.error) throw new Error("Failed to log meals")
 }
 
 export async function deleteMealEntry(id: string): Promise<void> {
