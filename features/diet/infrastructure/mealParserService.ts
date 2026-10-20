@@ -18,6 +18,8 @@ const INSTRUCTIONS = [
   "Extract the foods the user ate, grouped by meal.",
   "Reuse an existing food (set existing_id to its id) only when it is exactly the same food. A related, similar or composite food is NOT the same food: 'cheese' is not 'cheesy sandwich', and a fried wonton is not a tequeño. When in doubt, set existing_id to null and create it as a new food.",
   "Do not add items the user did not mention. List each thing the user named as its own item.",
+  "When the user names the parts of a dish ('bread with cheese'), list each part as its own item and never also add a composite dish that already contains them ('cheese sandwich'): that counts the same food twice.",
+  "Different varieties are different foods. Never merge a variety with another one that has a similar name, for example 'plátano bizcocho' (small banana) is not 'plátano de isla'.",
   "When several existing foods could match, choose the one whose name is the plainest, closest to the generic word the user said (for example 'eggs' matches 'Egg', not a cooked variant), unless the user named the preparation.",
   "Use English names unless it is a local dish with no common English name.",
   "quantity is the number of portions. calories is for ONE portion.",
