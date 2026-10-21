@@ -3,7 +3,11 @@
 import { Spinner } from "@/components/ui/spinner"
 import { cn } from "@/lib/utils"
 import { useDailyLog } from "../../application/useMealEntries"
-import { calculateDailyTotals } from "../../domain/calories"
+import {
+  calculateDailyTotals,
+  calculateMacroTotals,
+  formatMacroTotal,
+} from "../../domain/calories"
 import { CalorieResult } from "../../domain/types"
 
 interface DayOverviewProps {
@@ -21,11 +25,13 @@ export default function DayOverview({ date, calories }: DayOverviewProps) {
   const isOver = remaining < 0
   const progress = target > 0 ? Math.min((consumed / target) * 100, 100) : 0
 
+  const macroTotals = calculateMacroTotals(data ?? [])
   const macros = [
-    { label: "Protein", value: Math.round(totals.protein) },
-    { label: "Carbs", value: Math.round(totals.carbs) },
-    { label: "Fat", value: Math.round(totals.fat) },
+    { label: "Protein", total: macroTotals.protein },
+    { label: "Carbs", total: macroTotals.carbs },
+    { label: "Fat", total: macroTotals.fat },
   ]
+  const hasMissingMacros = macros.some((macro) => !macro.total.complete)
 
   return (
     <section className="bg-card rounded-lg border p-5">
@@ -73,11 +79,17 @@ export default function DayOverview({ date, calories }: DayOverviewProps) {
               <div key={macro.label} className="space-y-0.5">
                 <dt className="text-muted-foreground text-xs">{macro.label}</dt>
                 <dd className="text-sm font-medium tabular-nums">
-                  {macro.value} g
+                  {formatMacroTotal(macro.total)}
                 </dd>
               </div>
             ))}
           </dl>
+
+          {hasMissingMacros && (
+            <p className="text-muted-foreground text-xs">
+              * Some foods have no macro data, so this total is incomplete.
+            </p>
+          )}
 
           <p className="text-muted-foreground text-xs tabular-nums">
             BMR {Math.round(calories.bmr)} · TDEE {Math.round(calories.tdee)}

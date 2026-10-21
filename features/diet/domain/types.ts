@@ -35,6 +35,17 @@ export type MealEntryInput = {
   log_date: string,
 }
 
+export type MacroTotal = {
+  value: number
+  complete: boolean
+}
+
+export type MacroTotals = {
+  protein: MacroTotal
+  carbs: MacroTotal
+  fat: MacroTotal
+}
+
 export type DailyTotals = {
   calories: number,
   protein: number,

@@ -1,4 +1,9 @@
-import { calculateDailyTotals } from "../../domain/calories"
+import {
+  calculateDailyTotals,
+  calculateMacroTotals,
+  formatEntryMacro,
+  formatMacroTotal,
+} from "../../domain/calories"
 import { MealGroup } from "../../domain/types"
 import AddEntryDialog from "./AddEntryDialog"
 import DeleteEntryButton from "./DeleteEntryButton"
@@ -11,6 +16,7 @@ interface MealSectionProps {
 export default function MealSection({ mealGroup, date }: MealSectionProps) {
   const entries = mealGroup.entries
   const total = Math.round(calculateDailyTotals(entries).calories)
+  const macros = calculateMacroTotals(entries)
 
   return (
     <section className="bg-card overflow-hidden rounded-lg border">
@@ -18,9 +24,18 @@ export default function MealSection({ mealGroup, date }: MealSectionProps) {
         <h2 className="text-sm font-medium capitalize">
           {mealGroup.mealType.name}
         </h2>
-        <span className="text-muted-foreground text-xs tabular-nums">
-          {total} kcal
-        </span>
+        <div className="text-right">
+          <p className="text-muted-foreground text-xs tabular-nums">
+            {total} kcal
+          </p>
+          {entries.length > 0 && (
+            <p className="text-muted-foreground text-xs tabular-nums">
+              P {formatMacroTotal(macros.protein)} · C{" "}
+              {formatMacroTotal(macros.carbs)} · F{" "}
+              {formatMacroTotal(macros.fat)}
+            </p>
+          )}
+        </div>
       </header>
 
       {entries.length > 0 && (
@@ -33,7 +48,9 @@ export default function MealSection({ mealGroup, date }: MealSectionProps) {
               <div className="min-w-0">
                 <p className="truncate text-sm">{entry.foods.name}</p>
                 <p className="text-muted-foreground text-xs tabular-nums">
-                  × {entry.quantity}
+                  × {entry.quantity} · P {formatEntryMacro(entry.protein)} · C{" "}
+                  {formatEntryMacro(entry.carbs)} · F{" "}
+                  {formatEntryMacro(entry.fat)}
                 </p>
               </div>
               <div className="flex items-center gap-1">

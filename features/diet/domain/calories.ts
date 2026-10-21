@@ -1,5 +1,5 @@
 import { Enums, Tables } from "@/lib/supabase/types"
-import { CalorieInput, CalorieResult, DailyTotals, Macros, MealEntryWithFood, MealGroup } from "./types"
+import { CalorieInput, CalorieResult, DailyTotals, MacroTotal, MacroTotals, Macros, MealEntryWithFood, MealGroup } from "./types"
 
 // Lookup table: the sex-based offset in the Mifflin-St Jeor formula
 const BMR_SEX_OFFSET: Record<Enums<"sex_type">, number> = {
@@ -69,6 +69,29 @@ export function calculateDailyTotals(entries: Tables<"meal_entries">[]): DailyTo
     }),
     { calories: 0, protein: 0, carbs: 0, fat: 0 }
   )
+}
+
+function sumKnown(values: (number | null)[]): MacroTotal {
+  return {
+    value: values.reduce<number>((sum, value) => sum + (value ?? 0), 0),
+    complete: values.every((value) => value !== null),
+  }
+}
+
+export function calculateMacroTotals(entries: Tables<"meal_entries">[]): MacroTotals {
+  return {
+    protein: sumKnown(entries.map((entry) => entry.protein)),
+    carbs: sumKnown(entries.map((entry) => entry.carbs)),
+    fat: sumKnown(entries.map((entry) => entry.fat)),
+  }
+}
+
+export function formatMacroTotal(total: MacroTotal): string {
+  return `${Math.round(total.value)} g${total.complete ? "" : "*"}`
+}
+
+export function formatEntryMacro(value: number | null): string {
+  return value === null ? "—" : `${Math.round(value)} g`
 }
 
 export function groupEntriesByMealType(mealTypes: Tables<"meal_types">[],entries: MealEntryWithFood[]): MealGroup[]{
