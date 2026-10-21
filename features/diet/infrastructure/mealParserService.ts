@@ -10,6 +10,7 @@ import {
   parsedMealsSchema,
   reconcileWithKnownFoods,
 } from "../domain/parsedMeals"
+import { retryTransient } from "./retryTransient"
 
 const MODEL = "gemini-3.1-flash-lite"
 const MAX_KNOWN_FOODS = 500
@@ -42,15 +43,17 @@ export async function parseMealText(text: string): Promise<ParsedMeals> {
   const knownFoods = data ?? []
 
   const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY })
-  const response = await ai.models.generateContent({
-    model: MODEL,
-    contents: `Existing foods: ${JSON.stringify(knownFoods.map(({ id, name }) => ({ id, name })))}\n\nUser said: ${trimmed}`,
-    config: {
-      systemInstruction: INSTRUCTIONS,
-      responseMimeType: "application/json",
-      responseJsonSchema: z.toJSONSchema(parsedMealsSchema),
-    },
-  })
+  const response = await retryTransient(() =>
+    ai.models.generateContent({
+      model: MODEL,
+      contents: `Existing foods: ${JSON.stringify(knownFoods.map(({ id, name }) => ({ id, name })))}\n\nUser said: ${trimmed}`,
+      config: {
+        systemInstruction: INSTRUCTIONS,
+        responseMimeType: "application/json",
+        responseJsonSchema: z.toJSONSchema(parsedMealsSchema),
+      },
+    })
+  )
 
   const parsed = parsedMealsSchema.parse(JSON.parse(response.text ?? ""))
   return reconcileWithKnownFoods(parsed, knownFoods)
