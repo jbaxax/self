@@ -83,11 +83,11 @@ export function removeItem(
   }
 }
 
-export function setItemQuantity(
+export function updateItem(
   parsed: ParsedMeals,
   mealIndex: number,
   itemIndex: number,
-  quantity: number
+  patch: Partial<ParsedFood>
 ): ParsedMeals {
   return {
     meals: parsed.meals.map((meal, m) =>
@@ -96,18 +96,58 @@ export function setItemQuantity(
         : {
             ...meal,
             items: meal.items.map((item, i) =>
-              i === itemIndex ? { ...item, quantity } : item
+              i === itemIndex ? { ...item, ...patch } : item
             ),
           }
     ),
   }
 }
 
+export function setItemQuantity(
+  parsed: ParsedMeals,
+  mealIndex: number,
+  itemIndex: number,
+  quantity: number
+): ParsedMeals {
+  return updateItem(parsed, mealIndex, itemIndex, { quantity })
+}
+
+const MIN_QUANTITY = 0.5
+
+export function stepQuantity(quantity: number, direction: 1 | -1): number {
+  if (direction === 1) return quantity < 1 ? 1 : quantity + 1
+  if (quantity > 1) return quantity - 1
+  return MIN_QUANTITY
+}
+
+export type MealTypeName = (typeof MEAL_TYPE_NAMES)[number]
+
+export function addItem(
+  parsed: ParsedMeals,
+  mealType: MealTypeName,
+  item: ParsedFood
+): ParsedMeals {
+  const hasMeal = parsed.meals.some((meal) => meal.meal_type === mealType)
+  if (!hasMeal) {
+    return { meals: [...parsed.meals, { meal_type: mealType, items: [item] }] }
+  }
+  return {
+    meals: parsed.meals.map((meal) =>
+      meal.meal_type === mealType
+        ? { ...meal, items: [...meal.items, item] }
+        : meal
+    ),
+  }
+}
+
+export function isItemValid(item: ParsedFood): boolean {
+  if (item.existing_id !== null) return item.quantity > 0
+  return parsedFoodSchema.safeParse(item).success
+}
+
 export function isReadyToSave(parsed: ParsedMeals): boolean {
   return (
     parsed.meals.length > 0 &&
-    parsed.meals.every((meal) =>
-      meal.items.every((item) => item.quantity > 0)
-    )
+    parsed.meals.every((meal) => meal.items.every(isItemValid))
   )
 }
