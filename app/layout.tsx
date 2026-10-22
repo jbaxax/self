@@ -1,3 +1,4 @@
+import type { Metadata, Viewport } from "next"
 import { Geist, Geist_Mono } from "next/font/google"
 
 import "./globals.css"
@@ -10,6 +11,15 @@ const fontMono = Geist_Mono({
   subsets: ["latin"],
   variable: "--font-mono",
 })
+
+export const metadata: Metadata = {
+  title: "Self",
+  applicationName: "Self",
+}
+
+export const viewport: Viewport = {
+  themeColor: "#0a0a0a",
+}
 
 export default function RootLayout({
   children,
