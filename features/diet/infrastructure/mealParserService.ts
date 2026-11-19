@@ -9,6 +9,7 @@ import {
   ParsedMeals,
   parsedMealsSchema,
   reconcileWithKnownFoods,
+  withCleanAliases,
 } from "../domain/parsedMeals"
 import { retryTransient } from "./retryTransient"
 
@@ -23,6 +24,7 @@ const INSTRUCTIONS = [
   "Different varieties are different foods. Never merge a variety with another one that has a similar name, for example 'plátano bizcocho' (small banana) is not 'plátano de isla'.",
   "When several existing foods could match, choose the one whose name is the plainest, closest to the generic word the user said (for example 'eggs' matches 'Egg', not a cooked variant), unless the user named the preparation.",
   "Use English names unless it is a local dish with no common English name.",
+  "For every new food (existing_id null), aliases lists up to 10 other short names a person might say for it, in English and in Spanish, each at most 40 characters. For an existing food, aliases is an empty list.",
   "quantity is the number of portions. calories is for ONE portion.",
 ].join(" ")
 
@@ -56,5 +58,5 @@ export async function parseMealText(text: string): Promise<ParsedMeals> {
   )
 
   const parsed = parsedMealsSchema.parse(JSON.parse(response.text ?? ""))
-  return reconcileWithKnownFoods(parsed, knownFoods)
+  return withCleanAliases(reconcileWithKnownFoods(parsed, knownFoods))
 }

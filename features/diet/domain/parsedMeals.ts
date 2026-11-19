@@ -2,6 +2,8 @@ import { z } from "zod"
 
 export const MAX_CALORIES_PER_PORTION = 2000
 export const MAX_MEAL_TEXT_LENGTH = 1000
+export const MAX_ALIASES_PER_FOOD = 10
+export const MAX_ALIAS_LENGTH = 40
 export const MEAL_TYPE_NAMES = ["Breakfast", "Lunch", "Dinner", "Snack"] as const
 
 export const parsedFoodSchema = z.object({
@@ -10,6 +12,7 @@ export const parsedFoodSchema = z.object({
   quantity: z.number().positive(),
   portion_desc: z.string().min(1),
   calories: z.number().positive().max(MAX_CALORIES_PER_PORTION),
+  aliases: z.array(z.string()).optional(),
 })
 
 export const parsedMealsSchema = z.object({
@@ -51,6 +54,33 @@ export function reconcileWithKnownFoods(
           portion_desc: known.portion_desc,
         }
       }),
+    })),
+  }
+}
+
+export function cleanAliases(aliases: string[] | undefined): string[] {
+  const seen = new Set<string>()
+  const cleaned: string[] = []
+  for (const alias of aliases ?? []) {
+    const trimmed = alias.trim()
+    const key = trimmed.toLowerCase()
+    if (trimmed.length === 0 || trimmed.length > MAX_ALIAS_LENGTH) continue
+    if (seen.has(key)) continue
+    seen.add(key)
+    cleaned.push(trimmed)
+    if (cleaned.length === MAX_ALIASES_PER_FOOD) break
+  }
+  return cleaned
+}
+
+export function withCleanAliases(parsed: ParsedMeals): ParsedMeals {
+  return {
+    meals: parsed.meals.map((meal) => ({
+      ...meal,
+      items: meal.items.map((item) => ({
+        ...item,
+        aliases: cleanAliases(item.aliases),
+      })),
     })),
   }
 }
