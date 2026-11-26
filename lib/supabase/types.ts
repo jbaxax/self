@@ -10,7 +10,7 @@ export type Database = {
   // Allows to automatically instantiate createClient with right options
   // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
   __InternalSupabase: {
-    PostgrestVersion: "14.5"
+    PostgrestVersion: "14.18"
   }
   graphql_public: {
     Tables: {
@@ -39,6 +39,32 @@ export type Database = {
   }
   public: {
     Tables: {
+      food_aliases: {
+        Row: {
+          alias: string
+          food_id: string
+          id: string
+        }
+        Insert: {
+          alias: string
+          food_id: string
+          id?: string
+        }
+        Update: {
+          alias?: string
+          food_id?: string
+          id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "food_aliases_food_id_fkey"
+            columns: ["food_id"]
+            isOneToOne: false
+            referencedRelation: "foods"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       foods: {
         Row: {
           calories: number
@@ -227,6 +253,16 @@ export type Database = {
       }
     }
     Functions: {
+      candidate_foods: {
+        Args: { p_k: number; p_text: string; p_threshold: number }
+        Returns: {
+          calories: number
+          id: string
+          name: string
+          portion_desc: string
+          score: number
+        }[]
+      }
       log_meals: {
         Args: { p_log_date: string; p_meals: Json }
         Returns: undefined

@@ -5,6 +5,7 @@ import { z } from "zod"
 import { createClient } from "@/lib/supabase/server"
 import { me } from "@/features/auth/infrastructure/authService.server"
 import {
+  KnownFood,
   MAX_MEAL_TEXT_LENGTH,
   ParsedMeals,
   parsedMealsSchema,
@@ -14,7 +15,8 @@ import {
 import { retryTransient } from "./retryTransient"
 
 const MODEL = "gemini-3.1-flash-lite"
-const MAX_KNOWN_FOODS = 500
+const MAX_CANDIDATE_FOODS = 30
+const CANDIDATE_MIN_SCORE = 0.3
 
 const INSTRUCTIONS = [
   "Extract the foods the user ate, grouped by meal.",
@@ -38,11 +40,13 @@ export async function parseMealText(text: string): Promise<ParsedMeals> {
   }
 
   const client = await createClient()
-  const { data } = await client
-    .from("foods")
-    .select("id, name, calories, portion_desc")
-    .limit(MAX_KNOWN_FOODS)
-  const knownFoods = data ?? []
+  const { data, error } = await client.rpc("candidate_foods", {
+    p_text: trimmed,
+    p_k: MAX_CANDIDATE_FOODS,
+    p_threshold: CANDIDATE_MIN_SCORE,
+  })
+  if (error) throw new Error("Could not search known foods")
+  const knownFoods: KnownFood[] = data ?? []
 
   const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY })
   const response = await retryTransient(() =>
